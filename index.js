@@ -4,7 +4,6 @@ const axios = require("axios");
 const vtt2srt = require("vtt-to-srt");
 const { c: course } = require("minimist")(process.argv.slice(2));
 const { default: srtParser2 } = require("srt-parser-2");
-const { map } = require("lodash");
 const { Translate } = require("@google-cloud/translate").v2;
 
 const parser = new srtParser2();
@@ -49,7 +48,7 @@ const translateSrt = async (srtArr) => {
   ]);
   const translations = [...trans1, ...trans2];
 
-  return map(srtArr, (srtObject, i) => ({
+  return srtArr.map((srtObject, i) => ({
     ...srtObject,
     text: translations[i],
   }));
@@ -57,7 +56,7 @@ const translateSrt = async (srtArr) => {
 
 const translateRequest = async (srtArr) => {
   let [translations] = await translate.translate(
-    map(srtArr, (srtObject) => srtObject.text),
+    srtArr.map((srtObject) => srtObject.text),
     {
       to: "es",
       model: "nmt",
